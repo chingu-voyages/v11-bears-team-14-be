@@ -4,7 +4,7 @@
   "description": "Chingu Voyage 11 Bears Team 14 Backend",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "",
     "start": "nodemon index.js"
   },
   "repository": {
