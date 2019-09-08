@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const dateSchema = require('./date').dateSchema;
 
 // Creating Place schema
 const placeSchema = mongoose.Schema({
@@ -16,6 +17,7 @@ const placeSchema = mongoose.Schema({
     },
     max_guests: {
         type: Number,
+        default: 1,
         required: true
     },
     no_of_bedrooms: {
@@ -30,17 +32,35 @@ const placeSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    available_dates: [ dateSchema ],
     latitude: {
         type: String
     },
     longitude: {
         type: String
-    },
-    isAvailable: {
-        type: Boolean,
-        required: true
     }
 });
+
+placeSchema.methods.isPlaceAvailable = (Place, startDate, endDate) => {
+    let availableDates = Place.available_dates;
+    return isValid(startDate, endDate, availableDates);
+}
+
+function isValid(start, end, availableDates) {
+    let isStartDateAvailable = false;
+    let isEndDateAvailable = false;
+    for (let i = 0 ; i < availableDates.length ; i++) {
+        let date = availableDates[i].date;
+        let isDateAvailable = availableDates[i].is_available;
+        if (start == date && isDateAvailable) {
+            isStartDateAvailable = true;
+        } 
+        if (end == date && isDateAvailable) {
+            isEndDateAvailable = true;
+        }
+    }
+    return (isStartDateAvailable && isEndDateAvailable);
+}
 
 // Creating a model for Place
 const Place = mongoose.model('Place', placeSchema);
