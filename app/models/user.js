@@ -25,13 +25,18 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    hosted_places: [{
-        type: String
-    }],
-    rented_places: [{
-        type: String
-    }]
-}); 
+    hosted_places: [
+      {
+        place_id: mongoose.Schema.Types.ObjectId,
+      },
+    ],
+    rented_places: [
+      {
+        place_id: mongoose.Schema.Types.ObjectId,
+      },
+    ],
+    // TODO: add field for profile pictures
+});
 
 // Method to generate Auth token
 userSchema.methods.generateAuthToken = () => {
