@@ -53,6 +53,8 @@ const placeSchema = mongoose.Schema({
 // }
 
 placeSchema.method.is_available = function(startDate, endDate) {
+
+  // Find any existing reservations that collide with the (startDate, endDate)
   const res = this.reservations.find((booking) => {
     if (booking.start_date < startDate) {
       if (bookings.end_date < startDate) {
@@ -66,9 +68,9 @@ placeSchema.method.is_available = function(startDate, endDate) {
       return false;
     }
   });
-  if (!!res) {
-    return false;
-  }
+
+  // If no collisions, return true, otherwise false
+  return !res;
 }
 
 // function isValid(start, end, availableDates) {
