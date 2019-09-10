@@ -47,47 +47,20 @@ const placeSchema = mongoose.Schema({
     }
 });
 
-// placeSchema.methods.isPlaceAvailable = (Place, startDate, endDate) => {
-//     let availableDates = Place.available_dates;
-//     return isValid(startDate, endDate, availableDates);
-// }
-
-placeSchema.method.is_available = function(startDate, endDate) {
+placeSchema.methods.is_available = function(startDate, endDate) {
 
   // Find any existing reservations that collide with the (startDate, endDate)
-  const res = this.reservations.find((booking) => {
-    if (booking.start_date < startDate) {
-      if (bookings.end_date < startDate) {
-        return false;
-      } else {
-        return true;
-      }
-    } else if (booking.start_date <= endDate) {
-      return true;
+  let result;
+  for (let i = 0 ; i < this.reservations.length ; i++) {
+    let booking = this.reservations[i];
+    if ((startDate < booking.start_date && endDate < booking.start_date) || (startDate > booking.end_date && endDate > booking.end_date)) {
+      result = true;
     } else {
       return false;
     }
-  });
-
-  // If no collisions, return true, otherwise false
-  return !res;
+  }
+  return result;
 }
-
-// function isValid(start, end, availableDates) {
-//     let isStartDateAvailable = false;
-//     let isEndDateAvailable = false;
-//     for (let i = 0 ; i < availableDates.length ; i++) {
-//         let date = availableDates[i].date;
-//         let isDateAvailable = availableDates[i].is_available;
-//         if (start == date && isDateAvailable) {
-//             isStartDateAvailable = true;
-//         }
-//         if (end == date && isDateAvailable) {
-//             isEndDateAvailable = true;
-//         }
-//     }
-//     return (isStartDateAvailable && isEndDateAvailable);
-// }
 
 // Creating a model for Place
 const Place = mongoose.model('Place', placeSchema);
