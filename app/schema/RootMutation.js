@@ -5,22 +5,12 @@ const {
     GraphQLInt
 } = require("graphql");
 
-const PersonType = require('../types/PersonType');
-const PersonResolver = require('../resolvers/person');
 const PlaceType = require('../types/PlaceType');
 const PlaceResolver = require('../resolvers/place');
 
 const mutation = {
-    person: {
-        type: PersonType,
-        args: {
-            firstname: { type: GraphQLNonNull(GraphQLString) },
-            lastname: { type: GraphQLNonNull(GraphQLString) }
-        },
-        resolve: PersonResolver.Mutation.create
-    },
 
-    // Adds a new place without reservations
+    // Adds a new Place without reservations
     addPlace: {
         type: PlaceType,
         args: {
@@ -37,7 +27,7 @@ const mutation = {
         resolve: PlaceResolver.Mutation.addPlace
     },
 
-    // Adds a reservation for a particular place_id
+    // Adds a Reservation for a particular place_id
     addReservation: {
         type: PlaceType,
         args: {
@@ -47,6 +37,25 @@ const mutation = {
             end_date: { type: new GraphQLNonNull(GraphQLString) }
         },
         resolve: PlaceResolver.Mutation.addReservation
+    },
+
+    // Deletes a Place for a given place_id. Returns the Place model which was deleted.
+    deletePlaceById: {
+        type: PlaceType,
+        args: {
+            place_id: { type: new GraphQLNonNull(GraphQLID) }
+        },
+        resolve: PlaceResolver.Mutation.deletePlaceById
+    },
+
+    // Deletes a Reservation for a given place_id and reservation_id. Returns the Place model with modified reservations.
+    deleteReservationById: {
+        type: PlaceType,
+        args: {
+            place_id: { type: new GraphQLNonNull(GraphQLID) },
+            reservation_id: { type: new GraphQLNonNull(GraphQLID) }
+        },
+        resolve: PlaceResolver.Mutation.deleteReservationById
     }
 }
 
