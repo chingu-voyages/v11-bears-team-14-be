@@ -56,26 +56,10 @@ exports.Mutation = {
     deleteReservationById: async(parent, args) => {
         try {
             const place = await PlaceModel.findById(args.place_id);
-            let deleteReservationIndex;
-            for (let i = 0 ; i < place.reservations.length ; i++) {
-                if (place.reservations[i].id === args.reservation_id) {
-                    deleteReservationIndex = i;
-                    break;
-                }
-            }
-            let updatedReservs;
-            if (deleteReservationIndex === 0 && place.reservations.length === 1) {
-                updatedReservs = [];
-            } else if (deleteReservationIndex === 0) {
-                updatedReservs = place.reservations.splice(1, place.reservations.length);
-            } else {
-                let letReservs = place.reservations.splice(0, deleteReservationIndex);
-                let rightReservs = place.reservations.splice(deleteReservationIndex, place.reservations.length);
-                updatedReservs = letReservs.concat(rightReservs);
-            }
+            let updatedReservations = place.reservations.filter((element) => element.id !== args.reservation_id);
             let updatedPlace = await PlaceModel.findByIdAndUpdate({ _id: args.place_id}, {
                 $set: {
-                    reservations: updatedReservs
+                    reservations: updatedReservations
                 }
             });
             return updatedPlace;
