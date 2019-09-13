@@ -1,6 +1,58 @@
 const PlaceModel = require('../models/place');
 
+// TODO 
+    // update place id
+    // get all places
+    // get all places by user_id
+    // get places by country code
+    // get places by type of place and country code
+    // get places by price range and country code
+    // get places by max_guests and country code
+
+
+
 exports.Query = {
+
+    getAllPlaces: (parent, args) => {
+        try {
+            return PlaceModel.find({});
+        } catch (err) {
+            throw err.message;
+        }
+    },
+
+    getAllPlacesByUserId: (parent, args) => {
+        try {
+            return PlaceModel.find({ host_id: args.user_id });
+        } catch (err) {
+            throw err.message;
+        }
+    },
+
+    getPlacesByCountryCode: (parent, args) => {
+        try {
+            return PlaceModel.find({ country_code: args.country_code });
+        } catch (err) {
+            throw err.message;
+        }
+    },
+
+    getPlaceByTypeAndCountry: (parent, args) => {
+        try {
+            return PlaceModel.find({ country_code: args.country_code, place_type: args.place_type });
+        } catch (err) {
+            throw err.message;
+        }
+    },
+
+    getPlaceByMaxGuestsAndCountry: (parent, args) => {
+        try{
+            return PlaceModel.find({ country_code: args.country_code, max_guests: {$gte: args.guests} });
+        } catch(err) {
+            throw err.message;
+        }
+    },
+
     getPlaceById: (parent, args) => {
         try {
             return PlaceModel.findById(args.id);
@@ -16,10 +68,11 @@ exports.Query = {
         } catch (err) {
             throw err.message;
         }
-    }
+    },
 }
 
 exports.Mutation = {
+
     addPlace: (parent, args) => {
         try {
             const place = new PlaceModel(args);
@@ -37,8 +90,12 @@ exports.Mutation = {
                 end_date: args.end_date
             }
             const place = await PlaceModel.findById(args.place_id);
-            place.reservations.push(reservation);
-            return place.save();
+            if (place.is_available(reservation.start_date, reservation.end_date)) {
+                place.reservations.push(reservation);
+                return place.save();
+            } else {
+                throw new Error('Place is not available for the given dates');
+            }
         } catch (err) {
             throw err.message;
         }

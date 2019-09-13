@@ -10,7 +10,7 @@ const ReservationType = require('../types/ReservationType');
 
 const PlaceType = new GraphQLObjectType({
     name: 'PlaceType',
-    fields: {
+    fields: () => ({
         id: { type: GraphQLID },
         place_type: { type: new GraphQLNonNull(GraphQLString) },
         host_id: { type: new GraphQLNonNull(GraphQLID) },
@@ -20,9 +20,10 @@ const PlaceType = new GraphQLObjectType({
         no_of_bathrooms: { type: new GraphQLNonNull(GraphQLInt) },
         address: { type: new GraphQLNonNull(GraphQLString) },
         reservations: { type: new GraphQLList(ReservationType) },
+        price_per_day: { type: new GraphQLNonNull(GraphQLInt) },
         latitude: { type: GraphQLString },
         longitude: { type: GraphQLString }
-    }
+    })
 });
 
 module.exports = PlaceType;

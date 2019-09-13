@@ -39,6 +39,10 @@ const placeSchema = mongoose.Schema({
          end_date: Date,
        }
     ],
+    price_per_day: {
+      type: Number,
+      required: true
+    },
     latitude: {
         type: String
     },
@@ -50,7 +54,9 @@ const placeSchema = mongoose.Schema({
 placeSchema.methods.is_available = function(startDate, endDate) {
 
   // Find any existing reservations that collide with the (startDate, endDate)
-  let result;
+  let result = true;
+  startDate = new Date(startDate);
+  endDate = new Date(endDate);
   for (let i = 0 ; i < this.reservations.length ; i++) {
     let booking = this.reservations[i];
     if ((startDate < booking.start_date && endDate < booking.start_date) || (startDate > booking.end_date && endDate > booking.end_date)) {

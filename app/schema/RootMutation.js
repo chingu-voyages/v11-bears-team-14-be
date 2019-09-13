@@ -21,6 +21,7 @@ const mutation = {
             no_of_bedrooms: { type: new GraphQLNonNull(GraphQLInt) },
             no_of_bathrooms: { type: new GraphQLNonNull(GraphQLInt) },
             address: { type: new GraphQLNonNull(GraphQLString) },
+            price_per_day: { type: new GraphQLNonNull(GraphQLInt) },
             latitude: { type: GraphQLString },
             longitude: { type: GraphQLString }
         },
