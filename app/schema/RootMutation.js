@@ -40,6 +40,24 @@ const mutation = {
         resolve: PlaceResolver.Mutation.addReservation
     },
 
+    // Updates the values of an existing place
+    updatePlace: {
+        type: PlaceType,
+        args: {
+            place_id: { type: new GraphQLNonNull(GraphQLID) },
+            place_type: { type: GraphQLString },
+            country_code: { type: GraphQLInt },
+            max_guests: { type: GraphQLInt },
+            no_of_bedrooms: { type: GraphQLInt },
+            no_of_bathrooms: { type: GraphQLInt },
+            address: { type: GraphQLString },
+            price_per_day: { type: GraphQLInt },
+            latitude: { type: GraphQLString },
+            longitude: { type: GraphQLString }
+        },
+        resolve: PlaceResolver.Mutation.updatePlace
+    },
+
     // Deletes a Place for a given place_id. Returns the Place model which was deleted.
     deletePlaceById: {
         type: PlaceType,

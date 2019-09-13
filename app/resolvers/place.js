@@ -1,16 +1,5 @@
 const PlaceModel = require('../models/place');
 
-// TODO 
-    // update place id
-    // get all places
-    // get all places by user_id
-    // get places by country code
-    // get places by type of place and country code
-    // get places by price range and country code
-    // get places by max_guests and country code
-
-
-
 exports.Query = {
 
     getAllPlaces: (parent, args) => {
@@ -48,6 +37,14 @@ exports.Query = {
     getPlaceByMaxGuestsAndCountry: (parent, args) => {
         try{
             return PlaceModel.find({ country_code: args.country_code, max_guests: {$gte: args.guests} });
+        } catch(err) {
+            throw err.message;
+        }
+    },
+
+    getPlaceWithinPriceRangeAndCountry: (parent, args) => {
+        try{
+            return PlaceModel.find({ country_code: args.country_code, price_per_day: { $gte: args.min_price, $lte: args.max_price }});
         } catch(err) {
             throw err.message;
         }
@@ -101,7 +98,25 @@ exports.Mutation = {
         }
     },
 
-    deletePlaceById: async(parent, args) => {
+    updatePlace: async (parent, args) => {
+        try{    
+            const place = await PlaceModel.findById(args.place_id);
+            args.place_type ? place.place_type = args.place_type : null;
+            args.country_code ? place.country_code = args.country_code : null;
+            args.max_guests ? place.max_guests = args.max_guests : null;
+            args.no_of_bedrooms ? place.no_of_bedrooms = args.no_of_bedrooms : null;
+            args.no_of_bathrooms ? place.no_of_bathrooms = args.no_of_bathrooms : null;
+            args.address ? place.address = args.address : null
+            args.price_per_day ? place.price_per_day = args.price_per_day : null;
+            args.latitude ? place.latitude = args.latitude : null;
+            args.longitude ? place.longitude = args.longitude : null;
+            return await PlaceModel.findByIdAndUpdate({ _id: args.place_id}, {$set: place,}, { new: true });
+        } catch(err) {
+            throw err.message;
+        }
+    },
+
+    deletePlaceById: async (parent, args) => {
         try {
             const deletedPlace = await PlaceModel.findByIdAndRemove(args.place_id);
             return deletedPlace;

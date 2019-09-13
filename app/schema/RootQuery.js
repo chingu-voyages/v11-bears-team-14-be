@@ -18,6 +18,15 @@ const query = {
         resolve: PlaceResolver.Query.getAllPlaces
     },
 
+    // Returns a place for a given Place Id
+    getPlaceById: {
+        type: PlaceType,
+        args: {
+            id: { type: GraphQLNonNull(GraphQLID) }
+        },
+        resolve: PlaceResolver.Query.getPlaceById
+    },
+
     // Returns all places hosted by a user_id
     getAllPlacesByUserId: {
         type: new GraphQLList(PlaceType),
@@ -46,6 +55,7 @@ const query = {
         resolve: PlaceResolver.Query.getPlaceByTypeAndCountry
     },
 
+    // Returns all places less than the given no of guests and country code
     getPlaceByMaxGuestsAndCountry: {
         type: new GraphQLList(PlaceType),
         args: {
@@ -55,13 +65,15 @@ const query = {
         resolve: PlaceResolver.Query.getPlaceByMaxGuestsAndCountry
     },
 
-    // Returns a place for a given Place Id
-    getPlaceById: {
-        type: PlaceType,
+    // Returns all places within given price range and country code
+    getPlaceWithinPriceRangeAndCountry: {
+        type: new GraphQLList(PlaceType),
         args: {
-            id: { type: GraphQLNonNull(GraphQLID) }
+            country_code: { type: GraphQLNonNull(GraphQLInt)},
+            min_price: { type: GraphQLNonNull(GraphQLInt)},
+            max_price: { type: GraphQLNonNull(GraphQLInt)}
         },
-        resolve: PlaceResolver.Query.getPlaceById
+        resolve: PlaceResolver.Query.getPlaceWithinPriceRangeAndCountry
     },
 
     // Returns all reservations for a given Place Id
