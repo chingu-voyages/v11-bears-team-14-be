@@ -5,8 +5,10 @@ const {
 } = require("graphql");
 
 const PersonType = require('../types/PersonType');
+const UserType = require('../types/UserType')
 const PeopleResolver = require('../resolvers/people');
 const PersonResolver = require('../resolvers/person');
+const UserResolver = require('../resolvers/user');
 
 const query = {
     people: {
@@ -19,6 +21,13 @@ const query = {
             id: { type: GraphQLNonNull(GraphQLID) }
         },
         resolve: PersonResolver.Query.byId
+    },
+    user: {
+      type: UserType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) }
+      },
+      resolve: UserResolver.Query.byId,
     }
 }
 module.exports = query;
