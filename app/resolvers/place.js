@@ -120,8 +120,13 @@ exports.Mutation = {
 
     deletePlaceById: async (parent, args) => {
         try {
-            const deletedPlace = await PlaceModel.findByIdAndRemove(args.place_id);
-            return deletedPlace;
+            const place = await PlaceModel.findById(args.place_id);
+            if (place.canDeletePlace()) {
+                const deletedPlace = await PlaceModel.findByIdAndRemove(args.place_id);
+                return deletedPlace;
+            } else {
+                throw new Error(`Place can't be deleted as there are upcoming reservations.`);
+            }
         } catch (err) {
             throw err.message;
         }

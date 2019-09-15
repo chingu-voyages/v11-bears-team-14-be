@@ -70,12 +70,22 @@ placeSchema.methods.is_available = function(startDate, endDate) {
 }
 
 placeSchema.methods.getTotalCost = function(startDate, endDate) {
-
   startDate = new Date(startDate);
   endDate = new Date(endDate);
   let diffTime = Math.abs(endDate.getTime() - startDate.getTime());
   let total_days = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   return (total_days + 1) * this.price_per_day;
+}
+
+placeSchema.methods.canDeletePlace = function() {
+  let today = new Date();
+  for (let i = 0 ; i < this.reservations.length ; i++) {
+    let booking = this.reservations[i];
+    if (booking.start_date >= today) {
+      return false;
+    }
+  }
+  return true;
 }
 
 // Creating a model for Place
