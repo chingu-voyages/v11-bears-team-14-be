@@ -24,7 +24,7 @@ const mutation = {
         lastname: { type: new GraphQLNonNull(GraphQLString) },
         email: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) },
-        country: { type: new GraphQLNonNull(GraphQLString) },
+        country_code: { type: new GraphQLNonNull(GraphQLString) },
       },
       resolve: UserResolver.Mutation.createUser,
     },

@@ -13,6 +13,18 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// CORS
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS');
+    if (req.method == 'OPTIONS') {
+        return res.sendStatus(200);
+    }
+    next();
+});
+
 // Rate Limiter
 const rateLimiter = expressRateLimit({
     windowMs: 60 * 60 * 1000, // 1hr

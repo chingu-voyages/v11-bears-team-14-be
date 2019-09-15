@@ -2,13 +2,14 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 
 exports.Query = {
-  byId: (root, args, context, info) => {
-    return User.findById(args.id).exec();
+  byId: async (root, args, context, info) => {
+    const res = await User.findById(args.id).exec();
+    return res;
   }
 }
 
 exports.Mutation = {
-  createUser: (root, args, context, info) => {
+  createUser: async (root, args, context, info) => {
     return bcrypt.hash(args.password, 12)
       .then((hash) => {
         const props = {
@@ -16,7 +17,8 @@ exports.Mutation = {
           password: hash,
         }
         const user = new User(props);
-        return user.save();
+        await user.save();
+        return user;
       });
   },
 }
