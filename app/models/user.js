@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
-const jwt = require('jsonwebtoken');
+const { sign } = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const TokenModel = require('./token');
 
 // Creating user schema
-const userSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
     firstName: {
         type: String,
         required: true
@@ -15,10 +17,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        match: /.+@.+/
+        // match: /.+@.+/
     },
     country_code: {
-        type: Number,
+        type: String,
         required: true
     },
     password: {
@@ -38,13 +40,50 @@ const userSchema = new mongoose.Schema({
     // TODO: add field for profile pictures
 });
 
-// Method to generate Auth token
-userSchema.methods.generateAuthToken = () => {
-    // TODO make private key configurable
-    return jwt.sign({ _id : this._id }, 'jwtPrivateKey');
+UserSchema.methods.generateJWT = function () {
+    let today = new Date();
+    let exp = new Date(today);
+    exp.setDate(today.getDate() + 60);
+    const token = sign({
+        id: this.id,
+        exp: parseInt(exp.getTime() / 1000),
+    }, process.env.JWT_SECRET);
+    return token;
+};
+UserSchema.methods.toAuthJSON = async function () {
+    const tokenPayload = {
+        userId: this.id,
+        token: this.generateJWT(),
+        status: 'active'
+    }
+    const createToken = new TokenModel(tokenPayload);
+    await createToken.save();
+    return {
+        id: this.id,
+        firstname: this.firstname,
+        lastname: this.lastname,
+        email: this.email,
+        country_code: this.country_code,
+        rented_places: this.rented_places,
+        hosted_places: this.hosted_places,
+        token: tokenPayload.token,
+    };
+};
+
+UserSchema.statics.login = async function(cred) {
+  const user = await this.findOne({
+    email: cred.email,
+  }).exec();
+  if (!user) throw Error('Invalid email or password');
+
+  console.log(cred, user);
+  const logstat = await bcrypt.compare(cred.password, user.password);
+  if (!logstat) throw Error('Invalid email or password');
+
+  return user;
 }
 
 // Creating a model for User
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('User', UserSchema);
 
 module.exports = User;
