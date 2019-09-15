@@ -35,7 +35,8 @@ const mutation = {
             place_id: { type: new GraphQLNonNull(GraphQLID) },
             user_id: { type: new GraphQLNonNull(GraphQLInt) },
             start_date: { type: new GraphQLNonNull(GraphQLString) },
-            end_date: { type: new GraphQLNonNull(GraphQLString) }
+            end_date: { type: new GraphQLNonNull(GraphQLString) },
+            total_price: { type: GraphQLInt }
         },
         resolve: PlaceResolver.Mutation.addReservation
     },

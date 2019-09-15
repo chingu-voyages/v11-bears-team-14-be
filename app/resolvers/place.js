@@ -88,6 +88,8 @@ exports.Mutation = {
             }
             const place = await PlaceModel.findById(args.place_id);
             if (place.is_available(reservation.start_date, reservation.end_date)) {
+                let total_cost = place.getTotalCost(reservation.start_date, reservation.end_date);
+                reservation.total_cost = total_cost;
                 place.reservations.push(reservation);
                 return place.save();
             } else {

@@ -123,6 +123,31 @@ describe('Get Place GraphQL APIs', () => {
     });
 });
 
+describe('Update Place GraphQL APIs', () => {
+
+    it('Updates a place by id for a given Place id', async () => {
+        const response = await axios.post(queryURL, {
+            query: `mutation {
+                updatePlace(place_id: "${place_id}", place_type: "House", country_code: 400, price_per_day: 4000, address: "New Address") {
+                  id
+                  place_type
+                  country_code
+                  price_per_day
+                  address
+                }
+              }`
+        }); 
+
+        expect(response.status).toBe(200);
+
+        const { data } = response.data;
+        expect(data.updatePlace.id).toBe(`${place_id}`);
+        expect(data.updatePlace.country_code).toBe(400);
+        expect(data.updatePlace.price_per_day).toBe(4000);
+        expect(data.updatePlace.address).toBe("New Address");
+    });
+});
+
 describe('Delete Place GraphQL APIs', () => {
 
     it ('Deletes a reservation by id for a given Place id', async () => {

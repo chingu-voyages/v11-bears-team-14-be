@@ -37,6 +37,7 @@ const placeSchema = mongoose.Schema({
          user_id: Number,
          start_date: Date,
          end_date: Date,
+         total_cost: Number
        }
     ],
     price_per_day: {
@@ -66,6 +67,15 @@ placeSchema.methods.is_available = function(startDate, endDate) {
     }
   }
   return result;
+}
+
+placeSchema.methods.getTotalCost = function(startDate, endDate) {
+
+  startDate = new Date(startDate);
+  endDate = new Date(endDate);
+  let diffTime = Math.abs(endDate.getTime() - startDate.getTime());
+  let total_days = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return (total_days + 1) * this.price_per_day;
 }
 
 // Creating a model for Place

@@ -2,7 +2,8 @@ const {
     GraphQLID,
     GraphQLString,
     GraphQLObjectType,
-    GraphQLNonNull
+    GraphQLNonNull,
+    GraphQLInt
 } = require("graphql");
 
 const ReservationType = new GraphQLObjectType({
@@ -12,7 +13,8 @@ const ReservationType = new GraphQLObjectType({
         id: { type: GraphQLID },
         user_id: { type: new GraphQLNonNull(GraphQLID) },
         start_date: { type: new GraphQLNonNull(GraphQLString) },
-        end_date: { type: new GraphQLNonNull(GraphQLString) }
+        end_date: { type: new GraphQLNonNull(GraphQLString) },
+        total_cost: { type: new GraphQLNonNull(GraphQLInt) }
     }
 });
 
