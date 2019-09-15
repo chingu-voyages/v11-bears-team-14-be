@@ -11,17 +11,20 @@ const {
 const PlaceRefType = new GraphQLObjectType({
   name: 'PlaceRef',
   fields: {
-    place_id: new GraphQLNonNull(GraphQLID)
+    place_id: {type: new GraphQLNonNull(GraphQLID)}
   },
 });
 
 module.exports = new GraphQLObjectType({
   name: 'User',
   fields: {
-    id: GraphQLID,
-    firstName: GraphQLString,
-    lastName: GraphQLString,
-    rented_places: GraphQLList(PlaceRefType),
-    hosted_places: GraphQLList(PlaceRefType),
+    id: {type: GraphQLID},
+    firstName: {type: GraphQLString},
+    lastName: {type: GraphQLString},
+    email: {type: GraphQLString},
+    country_code: { type: GraphQLString },
+    rented_places: {type: GraphQLList(PlaceRefType)},
+    hosted_places: {type: GraphQLList(PlaceRefType)},
+    token: { type: GraphQLString }
   }
 });
