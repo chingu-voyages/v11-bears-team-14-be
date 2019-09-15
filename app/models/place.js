@@ -37,8 +37,13 @@ const placeSchema = mongoose.Schema({
          user_id: Number,
          start_date: Date,
          end_date: Date,
+         total_cost: Number
        }
     ],
+    price_per_day: {
+      type: Number,
+      required: true
+    },
     latitude: {
         type: String
     },
@@ -50,7 +55,9 @@ const placeSchema = mongoose.Schema({
 placeSchema.methods.is_available = function(startDate, endDate) {
 
   // Find any existing reservations that collide with the (startDate, endDate)
-  let result;
+  let result = true;
+  startDate = new Date(startDate);
+  endDate = new Date(endDate);
   for (let i = 0 ; i < this.reservations.length ; i++) {
     let booking = this.reservations[i];
     if ((startDate < booking.start_date && endDate < booking.start_date) || (startDate > booking.end_date && endDate > booking.end_date)) {
@@ -60,6 +67,25 @@ placeSchema.methods.is_available = function(startDate, endDate) {
     }
   }
   return result;
+}
+
+placeSchema.methods.getTotalCost = function(startDate, endDate) {
+  startDate = new Date(startDate);
+  endDate = new Date(endDate);
+  let diffTime = Math.abs(endDate.getTime() - startDate.getTime());
+  let total_days = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return (total_days + 1) * this.price_per_day;
+}
+
+placeSchema.methods.canDeletePlace = function() {
+  let today = new Date();
+  for (let i = 0 ; i < this.reservations.length ; i++) {
+    let booking = this.reservations[i];
+    if (booking.start_date >= today) {
+      return false;
+    }
+  }
+  return true;
 }
 
 // Creating a model for Place
