@@ -7,6 +7,8 @@ const {
 
 const PlaceType = require('../types/PlaceType');
 const PlaceResolver = require('../resolvers/place');
+const UserType = require('../types/UserType');
+const UserResolver = require('../resolvers/user');
 
 const mutation = {
 
@@ -76,7 +78,27 @@ const mutation = {
             reservation_id: { type: new GraphQLNonNull(GraphQLID) }
         },
         resolve: PlaceResolver.Mutation.deleteReservationById
+    },
+  
+    user: {
+      type: UserType,
+      args: {
+        firstName: { type: new GraphQLNonNull(GraphQLString) },
+        lastName: { type: new GraphQLNonNull(GraphQLString) },
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) },
+        country_code: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      resolve: UserResolver.Mutation.createUser,
+    },
+  
+    login: {
+      type: UserType,
+      args: {
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        password: {type: new GraphQLNonNull(GraphQLString) }
+      },
+      resolve: UserResolver.Mutation.login,
     }
 }
-
 module.exports = mutation;

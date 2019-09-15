@@ -9,6 +9,8 @@ const {
 const PlaceType = require('../types/PlaceType');
 const PlaceResolver = require('../resolvers/place');
 const ReservationType = require('../types/ReservationType');
+const UserType = require('../types/UserType')
+const UserResolver = require('../resolvers/user');
 
 const query = {
 
@@ -83,6 +85,13 @@ const query = {
             id: { type: GraphQLNonNull(GraphQLID) }
         },
         resolve: PlaceResolver.Query.getReservationsByPlaceId
+    },
+    user: {
+      type: UserType,
+      // args: {
+      //   id: { type: new GraphQLNonNull(GraphQLID) }
+      // },
+      resolve: UserResolver.Query.byId,
     }
 }
 module.exports = query;
