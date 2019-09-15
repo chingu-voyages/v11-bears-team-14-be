@@ -24,9 +24,9 @@ const query = {
     },
     user: {
       type: UserType,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLID) }
-      },
+      // args: {
+      //   id: { type: new GraphQLNonNull(GraphQLID) }
+      // },
       resolve: UserResolver.Query.byId,
     }
 }
