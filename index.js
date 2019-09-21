@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const ExpressGraphQL = require("express-graphql");
 const expressRateLimit = require('express-rate-limit');
 const { verify } = require('jsonwebtoken');
+const fileUpload = require('express-fileupload');
+const fileuploadroute = require('./app/routes/fileUpload');
 require('dotenv').config();
 
 const { dbconnection } = require('./app/connection');
@@ -73,5 +75,16 @@ app.use('/graphql', ExpressGraphQL({
 const server = app.listen(port, () => {
     console.log('APP is listening on port:', port);
 });
+
+// Express-Fileupload
+app.use(fileUpload({
+    useTempFiles: true,
+    tempFileDir: '/tmp/',
+    createParentPath: true,
+    safeFileNames: true
+}));
+
+// Routing
+app.use('/api', fileuploadroute);
 
 module.exports = server;
